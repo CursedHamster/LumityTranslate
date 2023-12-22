@@ -9,9 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.1",
+    "gsap": "^3.12.4",
     "vue": "^3.3.8"
   },
   "devDependencies": {
+    "@types/node": "^20.10.5",
     "@vitejs/plugin-vue": "^4.5.0",
     "less": "^4.2.0",
     "typescript": "^5.2.2",

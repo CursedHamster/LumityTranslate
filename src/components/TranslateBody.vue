@@ -7,6 +7,7 @@ import {
   onUpdated,
   onBeforeUnmount,
 } from "vue";
+import gsap from "gsap";
 import { LanguageContent } from "./LanguageContent";
 const props = defineProps<{
   languageContent: LanguageContent;
@@ -14,9 +15,11 @@ const props = defineProps<{
 const isActive = computed(() => props?.languageContent?.isActive);
 const emit = defineEmits(["setLanguageContent"]);
 
-const maxTextLength: number = 2000;
+const maxTextLength: number = 4000;
 const textInput = ref(props?.languageContent?.text || "");
 const textLength = computed(() => textInput?.value?.length);
+
+const copyTimeline = gsap.timeline();
 
 watch(textInput, (val: string) => {
   if (isActive.value) {
@@ -54,6 +57,60 @@ function copyTranslation() {
   if (translation) {
     navigator.clipboard.writeText(translation);
   }
+
+  const copyText: Element | null = document.querySelector(
+    ".translate-copy-text"
+  );
+
+  if (copyText) {
+    if (copyTimeline?.isActive()) {
+      copyTimeline?.clear();
+    }
+    copyTimeline
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 1 },
+        {
+          autoAlpha: 0,
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        {},
+        {
+          innerText: "Copied!",
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.5 }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 1 },
+        {
+          autoAlpha: 0,
+          duration: 0.1,
+          delay: 1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        {},
+        {
+          innerText: "Copy",
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.5 }
+      );
+  }
 }
 
 function handleTextAreaInput() {
@@ -62,11 +119,15 @@ function handleTextAreaInput() {
   textArea.style.height = "1px";
   const activeScrollHeight: number = textArea.scrollHeight;
   const inactiveClientHeight: number = inactiveArea.scrollHeight;
-  const textAreaScrollHeight: number =
-    activeScrollHeight > inactiveClientHeight
-      ? activeScrollHeight
-      : inactiveClientHeight;
-  textArea.style.height = textAreaScrollHeight + "px";
+  if (innerWidth > 1024) {
+    const textAreaScrollHeight: number =
+      activeScrollHeight > inactiveClientHeight
+        ? activeScrollHeight
+        : inactiveClientHeight;
+    textArea.style.height = textAreaScrollHeight + "px";
+  } else {
+    textArea.style.height = activeScrollHeight + "px";
+  }
 }
 
 if (isActive.value) {
@@ -99,21 +160,31 @@ if (isActive.value) {
           >Translation result...</span
         >{{ textInput }}
       </div>
-      <i
+      <button
         v-if="isActive"
         v-show="textInput.length > 0"
-        class="translate-wipe fi-xwluxl-times-wide"
         @click="wipeText"
-      ></i>
+        class="translate-wipe"
+        aria-label="Wipe text"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
       <div v-if="isActive" class="translate-letters">
         <span :class="{ invalid: textLength > maxTextLength }">{{
           textLength ? textLength : 0
         }}</span>
-        / {{ maxTextLength }}
+        / <span>{{ maxTextLength }}</span>
       </div>
-      <div v-if="!isActive" class="translate-copy" @click="copyTranslation">
-        Copy <i class="fi-xnsuxl-copy-solid"></i>
-      </div>
+      <button
+        v-if="!isActive"
+        v-show="textInput.length > 0"
+        class="translate-copy"
+        @click="copyTranslation"
+        aria-label="Copy translation"
+      >
+        <span class="translate-copy-text">Copy</span>
+        <span class="material-symbols-outlined">content_copy</span>
+      </button>
     </div>
   </div>
 </template>
@@ -168,7 +239,7 @@ if (isActive.value) {
   display: flex;
   align-items: center;
   gap: @gap-xs;
-  opacity: 0.5;
+  opacity: 0.7;
   .invalid {
     color: rgb(255, 128, 128);
   }
@@ -178,6 +249,62 @@ if (isActive.value) {
   position: absolute;
   top: @padding-xs;
   right: @padding-xs;
+  font-size: @font-size-sm;
+}
+
+.translate-copy,
+.translate-wipe {
+  cursor: pointer;
+  &:active .material-symbols-outlined {
+    scale: 0.95;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .translate-body {
+    border-radius: 0;
+    border: 0;
+    &.light {
+      padding: @padding-md @padding-md (@padding-md * 2 + @font-size-lg)
+        @padding-md;
+    }
+    &.dark {
+      .glassmorphicBackground.dark();
+      padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
+        (@padding-md * 2 + @font-size-lg) @padding-md;
+    }
+  }
+  .translate-copy,
+  .translate-letters {
+    bottom: @padding-sm;
+    right: @padding-md;
+  }
+  .translate-wipe {
+    top: @padding-sm;
+    right: @padding-md;
+  }
+}
+
+@media screen and (max-width: @screen-sm) {
+  .translate-body {
+    &.light {
+      padding: @padding-sm @padding-sm (@padding-sm * 2 + @font-size-lg)
+        @padding-sm;
+    }
+    &.dark {
+      .glassmorphicBackground.dark();
+      padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
+        (@padding-sm * 2 + @font-size-lg) @padding-sm;
+    }
+  }
+  .translate-copy,
+  .translate-letters {
+    bottom: @padding-xs;
+    right: @padding-sm;
+  }
+  .translate-wipe {
+    top: @padding-xs;
+    right: @padding-sm;
+  }
 }
 </style>
-./Language

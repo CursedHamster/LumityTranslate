@@ -6,7 +6,7 @@ const props = defineProps<{
   isActive: boolean;
   openDropdown: { open: boolean; languageId: number };
 }>();
-defineEmits(["setOpenDropdown"]);
+const emit = defineEmits(["setOpenDropdown"]);
 
 const isOpen = computed(
   () =>
@@ -15,10 +15,9 @@ const isOpen = computed(
 );
 </script>
 <template>
-  <div class="translate-header" :class="{ end: isActive }">
+  <div class="translate-header" :class="{ end: isActive, open: isOpen }">
     <button
       class="translate-dropdown-button"
-      :class="{ open: isOpen, closed: openDropdown?.open && !isOpen }"
       @click="
         $emit('setOpenDropdown', {
           open:
@@ -29,11 +28,22 @@ const isOpen = computed(
         })
       "
     >
-      {{ language?.name }}
+      <span class="translate-header-language">{{ language?.name }}</span>
+      <span class="translate-header-icon material-symbols-outlined">
+        expand_more
+      </span>
     </button>
-    <a v-if="language?.source" href="/" class="translate-source"
-      >Source <i class="fi-xwluxl-external-link-wide"></i
-    ></a>
+    <a
+      v-if="language?.source"
+      :href="language?.source"
+      class="translate-source"
+      target="_blank"
+      aria-label="Language source"
+    >
+      <span class="translate-source-icon material-symbols-outlined"
+        >open_in_new
+      </span></a
+    >
   </div>
 </template>
 <style scoped lang="less">
@@ -41,54 +51,51 @@ const isOpen = computed(
 .translate-header {
   position: relative;
   width: 100%;
-  height: @translate-header-height;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: @gap-xxs;
   flex-grow: 1;
   &.end {
-    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+  &.open {
+    .translate-header-icon {
+      transform: rotate(180deg);
+    }
   }
 }
 .translate-dropdown-button {
   position: relative;
-  max-width: 8rem;
+  max-width: 12rem;
   height: 100%;
-  padding: @padding-xxs @padding-sm;
-  color: white;
-  // border-bottom: 3px solid white;
-  &::before {
-    content: "";
-    position: absolute;
-    width: calc(100% - @padding-md);
-    height: 100%;
-    top: -1px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-bottom: 3px solid white;
-    margin: 0 auto;
-    z-index: 1;
-  }
-  &.open {
-    background: rgb(@text, 0.1);
-    border-radius: @border-radius-sm @border-radius-sm 0 0;
-    &::before {
-      display: none;
-    }
-  }
-  &.closed {
-    &::before {
-      display: none;
-    }
+  color: @text;
+  display: flex;
+  gap: @gap-xs;
+  align-items: center;
+  .translate-header-language {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
 .translate-source {
-  font-size: @font-size-sm;
-  padding: @padding-xxs @padding-sm;
   display: flex;
-  align-items: end;
-  gap: @gap-xs;
+  align-items: center;
+  text-decoration: none;
+}
+
+@media screen and (max-width: @screen-md) {
+  .translate-dropdown-button {
+    max-width: 10rem;
+  }
+}
+
+@media screen and (max-width: @screen-sm) {
+  .translate-dropdown-button {
+    max-width: 8rem;
+  }
 }
 </style>

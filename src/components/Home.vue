@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, watch, computed, onBeforeMount } from "vue";
+import gsap from "gsap";
 import { Language } from "./Language";
 import { LanguageContent } from "./LanguageContent";
 import TranslateBody from "./TranslateBody.vue";
 import TranslateHeader from "./TranslateHeader.vue";
-import data from "../assets/data";
+import { getAllLanguages } from "./supabaseService";
 
+const languagesData = ref<Language[]>([]);
 const languageContents = ref<{
   standard: LanguageContent;
   lumity: LanguageContent;
@@ -21,10 +23,33 @@ const openType = computed(() => {
   const newType = findLanguageById(openDropdown?.value?.languageId)?.type;
   return newType ? newType : "lumity";
 });
+const dropdownTimeline = gsap.timeline({});
 
 function setOpenDropdown(val: { open?: boolean; languageId?: number }) {
   openDropdown.value = { ...openDropdown.value, ...val };
 }
+
+watch(
+  () => openDropdown.value.open,
+  (val) => {
+    if (dropdownTimeline?.isActive()) {
+      dropdownTimeline?.clear();
+    }
+    if (val) {
+      dropdownTimeline?.fromTo(
+        ".translate-dropdown-container",
+        { height: "0px", autoAlpha: 0 },
+        { height: "auto", autoAlpha: 1, duration: 0.3 }
+      );
+    } else {
+      dropdownTimeline?.fromTo(
+        ".translate-dropdown-container",
+        { autoAlpha: 1 },
+        { height: "0px", autoAlpha: 0, duration: 0.3 }
+      );
+    }
+  }
+);
 
 function setLanguageContent(isActive: boolean, text: string) {
   if (isActiveStandard(isActive)) {
@@ -65,7 +90,7 @@ function changeLanguage(languageId: number) {
 }
 
 function findLanguageById(id: number): Language {
-  const language = data?.find((lang) => lang?.id === id);
+  const language = languagesData.value?.find((lang) => lang?.id === id);
 
   return language ? language : <Language>{};
 }
@@ -105,10 +130,10 @@ function swapActive() {
 
 function translateText(sourceText: string) {
   const isStandard: boolean = isActiveStandard(true);
-  const sourceAlphabet = findLanguageById(
+  const sourceAlphabet: string[] = findLanguageById(
     findLanguageContentByIsActive(true).languageId
   )?.alphabet;
-  const translationAlphabet = findLanguageById(
+  const translationAlphabet: string[] = findLanguageById(
     findLanguageContentByIsActive(false).languageId
   )?.alphabet;
   const translation: string | undefined = [...sourceText]
@@ -124,6 +149,10 @@ function translateText(sourceText: string) {
     .join("");
   setLanguageContent(false, translation || "");
 }
+
+onBeforeMount(() => {
+  getAllLanguages().then((res) => (languagesData.value = res?.data || []));
+});
 </script>
 
 <template>
@@ -138,7 +167,7 @@ function translateText(sourceText: string) {
         @set-open-dropdown="setOpenDropdown"
       />
       <button class="swap-button" @click="swapActive">
-        <i class="fi-xnsuxl-change-solid"></i>
+        <span class="material-symbols-outlined">swap_horiz</span>
       </button>
       <TranslateHeader
         :open-dropdown="openDropdown"
@@ -149,15 +178,18 @@ function translateText(sourceText: string) {
         @set-open-dropdown="setOpenDropdown"
       />
     </div>
-    <div v-show="openDropdown?.open" class="translate-dropdown-container">
+    <div class="translate-dropdown-container">
       <ul class="translate-dropdown-list">
-        <i
-          class="fi-xnllxl-arrow-simple"
-          @click="openDropdown = { ...openDropdown, open: false }"
-        ></i>
+        <button class="translate-dropdown-back">
+          <span
+            class="material-symbols-outlined"
+            @click="openDropdown = { ...openDropdown, open: false }"
+            >arrow_left_alt</span
+          >
+        </button>
         <li
           v-for="language in openType
-            ? data.filter((val) => val?.type === openType)
+            ? languagesData.filter((val) => val?.type === openType)
             : []"
           class="translate-dropdown-item"
           :class="{
@@ -184,13 +216,19 @@ function translateText(sourceText: string) {
 .main-container {
   width: 100%;
   flex-grow: 1;
-  padding: @padding-md @padding-lg;
+  padding: @padding-md @padding-xl;
   display: flex;
   flex-direction: column;
 }
 
 .swap-button {
-  height: @translate-header-height;
+  padding: @padding-xxs 0;
+  color: @text;
+  &:active {
+    .material-symbols-outlined {
+      scale: 0.95;
+    }
+  }
 }
 
 .translate-headers-container {
@@ -198,11 +236,11 @@ function translateText(sourceText: string) {
   justify-content: space-between;
   align-items: center;
   gap: @gap-sm;
+  overflow: auto hidden;
 }
 
 .translate-bodies-container {
   width: 100%;
-  flex: 1;
   display: flex;
   justify-content: space-between;
   gap: @gap-xl;
@@ -210,26 +248,27 @@ function translateText(sourceText: string) {
 
 .translate-dropdown-container {
   width: 100%;
-  // border-top: 1px solid rgb(@text, 0.5);
-  background: rgb(@text, 0.1);
-  box-shadow: 0 1px 0 rgb(@text, 0.2);
-  padding: @padding-sm;
+  height: 0;
+  visibility: 0;
+  opacity: 0;
+  overflow-y: hidden;
+  .glassmorphicBackground();
+  .glassmorphicBackground.light();
   border-radius: @border-radius-sm;
   margin-bottom: @padding-sm;
 }
 
 .translate-dropdown-list {
   list-style: none;
-  padding: 0;
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   gap: @gap-sm;
   align-items: center;
+  padding: @padding-sm;
+}
 
-  i {
-    cursor: pointer;
-  }
+.translate-dropdown-back {
 }
 
 .translate-dropdown-item {
@@ -238,16 +277,57 @@ function translateText(sourceText: string) {
   border: 2px solid @text;
   padding: @padding-xxs @padding-sm;
   text-align: center;
+  transition: all 0.2s ease-in-out;
   &:hover {
     background: rgb(@text, 0.1);
   }
   &.active {
     background: @text;
     color: @background;
-    &:hover {
-      color: rgb(108, 4, 80);
-    }
+  }
+}
+
+@media screen and (max-width: @screen-2xl) {
+  .main-container {
+    padding: @padding-md @padding-lg;
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .main-container {
+    padding: @padding-md @padding-md;
+  }
+  .translate-bodies-container {
+    gap: @gap-lg;
+  }
+}
+
+@media screen and (max-width: @screen-md) {
+  .main-container {
+    padding: @padding-md 0;
+  }
+  .translate-headers-container {
+    justify-content: space-between;
+  }
+  .translate-bodies-container {
+    flex-direction: column;
+    gap: @gap-md;
+  }
+  .translate-dropdown-container {
+    border-radius: 0;
+    border: 0;
+  }
+}
+
+@media screen and (max-width: @screen-sm) {
+  .main-container {
+    padding: 0;
+  }
+  .translate-bodies-container {
+    gap: @gap-sm;
+  }
+  .translate-dropdown-container {
+    margin-bottom: @padding-xs;
   }
 }
 </style>
-./Language
