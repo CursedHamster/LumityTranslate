@@ -268,9 +268,6 @@ onBeforeMount(() => {
   padding: @padding-sm;
 }
 
-.translate-dropdown-back {
-}
-
 .translate-dropdown-item {
   cursor: pointer;
   border-radius: @border-radius-sm;
