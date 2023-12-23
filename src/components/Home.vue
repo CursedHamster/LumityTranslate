@@ -38,14 +38,14 @@ watch(
     if (val) {
       dropdownTimeline?.fromTo(
         ".translate-dropdown-container",
-        { height: "0px", autoAlpha: 0 },
-        { height: "auto", autoAlpha: 1, duration: 0.3 }
+        { height: "0px", marginBottom: "0rem", autoAlpha: 0 },
+        { height: "auto", marginBottom: "1.5rem", autoAlpha: 1, duration: 0.3 }
       );
     } else {
       dropdownTimeline?.fromTo(
         ".translate-dropdown-container",
         { autoAlpha: 1 },
-        { height: "0px", autoAlpha: 0, duration: 0.3 }
+        { height: "0px", marginBottom: "0rem", autoAlpha: 0, duration: 0.3 }
       );
     }
   }
@@ -250,13 +250,12 @@ onBeforeMount(() => {
 .translate-dropdown-container {
   width: 100%;
   height: 0;
-  visibility: 0;
+  visibility: hidden;
   opacity: 0;
   overflow-y: hidden;
   .glassmorphicBackground();
   .glassmorphicBackground.light();
   border-radius: @border-radius-sm;
-  margin-bottom: @padding-sm;
 }
 
 .translate-dropdown-list {
