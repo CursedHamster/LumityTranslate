@@ -166,7 +166,7 @@ onBeforeMount(() => {
         "
         @set-open-dropdown="setOpenDropdown"
       />
-      <button class="swap-button" @click="swapActive">
+      <button class="swap-button" @click="swapActive" title="Swap languages">
         <span class="material-symbols-outlined">swap_horiz</span>
       </button>
       <TranslateHeader
@@ -180,7 +180,7 @@ onBeforeMount(() => {
     </div>
     <div class="translate-dropdown-container">
       <ul class="translate-dropdown-list">
-        <button class="translate-dropdown-back">
+        <button class="translate-dropdown-back" title="Close language choice">
           <span
             class="material-symbols-outlined"
             @click="openDropdown = { ...openDropdown, open: false }"
@@ -196,6 +196,7 @@ onBeforeMount(() => {
             active: language?.id === openDropdown?.languageId,
           }"
           @click="() => changeLanguage(language?.id)"
+          title="Click to choose language"
         >
           {{ language?.name }}
         </li>

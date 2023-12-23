@@ -1,25 +1,91 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import gsap from "gsap";
 import { LanguageContent } from "./LanguageContent";
-import Source from "./Source.vue";
-import Translation from "./Translation.vue";
 const props = defineProps<{
   languageContent: LanguageContent;
 }>();
-const isActive = computed(() => props?.languageContent?.isActive);
-const emit = defineEmits(["setLanguageContent"]);
+const translation = computed<string>(() => props.languageContent?.text || "");
+
+const copyTimeline = gsap.timeline();
+
+function copyTranslation() {
+  const translation: string | undefined = props?.languageContent?.text;
+  if (translation) {
+    navigator.clipboard.writeText(translation);
+  }
+
+  const copyText: Element | null = document.querySelector(
+    ".translate-copy-text"
+  );
+
+  if (copyText) {
+    if (copyTimeline?.isActive()) {
+      copyTimeline?.clear();
+    }
+    copyTimeline
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 1 },
+        {
+          autoAlpha: 0,
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        {},
+        {
+          innerText: "Copied!",
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.5 }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 1 },
+        {
+          autoAlpha: 0,
+          duration: 0.1,
+          delay: 1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        {},
+        {
+          innerText: "Copy",
+          duration: 0.1,
+        }
+      )
+      .fromTo(
+        ".translate-copy-text",
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.5 }
+      );
+  }
+}
 </script>
 <template>
-  <div class="translate-container">
-    <div class="translate-body" :class="{ dark: isActive, light: !isActive }">
-      <Source
-        v-if="isActive"
-        :language-content="languageContent"
-        @set-language-content="(...val) => $emit('setLanguageContent', ...val)"
-      />
-      <Translation v-else :language-content="languageContent" />
-    </div>
+  <div class="translate-area inactive-area" title="Translation result">
+    <span v-if="translation?.length === 0" class="placeholder"
+      >Translation result...</span
+    >{{ translation }}
   </div>
+  <button
+    v-show="translation?.length > 0"
+    class="translate-copy"
+    @click="copyTranslation"
+    aria-label="Copy translation"
+    title="Copy translation to your clipboard"
+  >
+    <span class="translate-copy-text">Copy</span>
+    <span class="material-symbols-outlined">content_copy</span>
+  </button>
 </template>
 <style scoped lang="less">
 @import "../style";

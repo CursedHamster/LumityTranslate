@@ -3,7 +3,10 @@
   <footer class="footer">
     <div class="footer-text">
       <span class="plain-text">website by </span
-      ><a href="https://github.com/CursedHamster" target="_blank"
+      ><a
+        href="https://github.com/CursedHamster"
+        title="To the GitHub page of CursedHamster - this website's developer"
+        target="_blank"
         >CursedHamster</a
       >
     </div>
@@ -11,6 +14,7 @@
       <span class="plain-text">background image by </span
       ><a
         href="https://www.freepik.com/free-vector/night-landscape-with-mountains-river-road_26796717.htm"
+        title="To the Freepik page of upklyak - the background image's author"
         target="_blank"
         >upklyak</a
       >

@@ -6,6 +6,7 @@
         ><img
           src="https://upload.wikimedia.org/wikipedia/fr/4/47/The-Owl-House-logo.png"
           alt="The Owl House Logo"
+          title="To the home page of LumityTranslate"
           class="header-logo"
       /></a>
       <a href="/"
@@ -13,7 +14,7 @@
       >
     </nav>
     <p class="header-text">
-      translate English into Luz's emoji language from The Owl House and back
+      translate English into Luz's emoji language from The Owl House and vice versa
     </p>
   </header>
 </template>

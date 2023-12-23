@@ -27,6 +27,7 @@ const isOpen = computed(
           languageId: language?.id,
         })
       "
+      title="Click to open language choice"
     >
       <span class="translate-header-language">{{ language?.name }}</span>
       <span class="translate-header-icon material-symbols-outlined">
@@ -39,6 +40,7 @@ const isOpen = computed(
       class="translate-source"
       target="_blank"
       aria-label="Language source"
+      title="To the external page of the language source"
     >
       <span class="translate-source-icon material-symbols-outlined"
         >open_in_new
