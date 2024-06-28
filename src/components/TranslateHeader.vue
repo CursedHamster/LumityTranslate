@@ -52,16 +52,17 @@ const isOpen = computed(
 @import "../style";
 .translate-header {
   position: relative;
+  padding: 0 @padding-sm;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   gap: @gap-xxs;
   flex-grow: 1;
-  &.end {
-    justify-content: flex-end;
-  }
+  // &.end {
+  //   justify-content: flex-end;
+  // }
   &.open {
     .translate-header-icon {
       transform: rotate(180deg);
@@ -80,6 +81,7 @@ const isOpen = computed(
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-weight: 600;
   }
 }
 
@@ -87,6 +89,9 @@ const isOpen = computed(
   display: flex;
   align-items: center;
   text-decoration: none;
+  span {
+    padding: 0;
+  }
 }
 
 @media screen and (max-width: @screen-md) {

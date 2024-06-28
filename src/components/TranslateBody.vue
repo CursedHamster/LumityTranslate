@@ -43,60 +43,13 @@ const emit = defineEmits(["setLanguageContent"]);
       (@padding-sm * 2 + @font-size-lg) @padding-sm;
   }
 }
-.translate-area {
-  flex-grow: 1;
-  width: 100%;
-  overflow: hidden;
-  word-break: break-all;
-  resize: none;
-  white-space: pre-wrap;
-  box-sizing: border-box;
-  background: none;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 0;
-  &::placeholder,
-  .placeholder {
-    color: white;
-    opacity: 0.7;
-  }
-}
-
-.translate-copy,
-.translate-letters {
-  position: absolute;
-  bottom: @padding-xs;
-  right: @padding-xs;
-  font-size: @font-size-sm;
-  display: flex;
-  align-items: center;
-  gap: @gap-xs;
-  opacity: 0.7;
-  .invalid {
-    color: rgb(255, 128, 128);
-  }
-}
-
-.translate-wipe {
-  position: absolute;
-  top: @padding-xs;
-  right: @padding-xs;
-  font-size: @font-size-sm;
-}
-
-.translate-copy,
-.translate-wipe {
-  cursor: pointer;
-  &:active .material-symbols-outlined {
-    scale: 0.95;
-  }
-}
 
 @media screen and (max-width: @screen-md) {
   .translate-body {
     border-radius: 0;
-    border: 0;
+    // border: 0;
+    border-left: 0;
+    border-right: 0;
     &.light {
       padding: @padding-md @padding-md (@padding-md * 2 + @font-size-lg)
         @padding-md;
@@ -106,15 +59,6 @@ const emit = defineEmits(["setLanguageContent"]);
       padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
         (@padding-md * 2 + @font-size-lg) @padding-md;
     }
-  }
-  .translate-copy,
-  .translate-letters {
-    bottom: @padding-sm;
-    right: @padding-md;
-  }
-  .translate-wipe {
-    top: @padding-sm;
-    right: @padding-md;
   }
 }
 
@@ -129,15 +73,6 @@ const emit = defineEmits(["setLanguageContent"]);
       padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
         (@padding-sm * 2 + @font-size-lg) @padding-sm;
     }
-  }
-  .translate-copy,
-  .translate-letters {
-    bottom: @padding-xs;
-    right: @padding-sm;
-  }
-  .translate-wipe {
-    top: @padding-xs;
-    right: @padding-sm;
   }
 }
 </style>

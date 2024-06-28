@@ -14,7 +14,8 @@
       >
     </nav>
     <p class="header-text">
-      translate English into Luz's emoji language from The Owl House and vice versa
+      translate English into Luz's emoji language from The Owl House and vice
+      versa
     </p>
   </header>
 </template>
@@ -45,8 +46,14 @@
       .extra {
         position: relative;
         padding: @padding-xxs @padding-xs;
-        font-weight: bold;
-        background: linear-gradient(114deg, #730086 30.11%, #2668ff 78.96%);
+        font-size: 0.9em;
+        // font-weight: bold;
+        // background: linear-gradient(114deg, #730086 30.11%, #2668ff 78.96%);
+        background: radial-gradient(
+          100.83% 105.99% at 41.28% 29.17%,
+          #17166d 0%,
+          #fd99ff 100%
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         &::before {
@@ -105,10 +112,10 @@
   .header {
     padding: @padding-sm @padding-sm;
     nav {
-      gap: @gap-xs;
+      gap: @gap-sm;
       h1 {
-      font-size: @font-size-md;
-    }
+        // font-size: @font-size-md;
+      }
     }
   }
 

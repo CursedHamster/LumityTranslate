@@ -102,12 +102,14 @@ onBeforeUnmount(() => {
 }
 
 .full-light {
+  mix-blend-mode: hard-light;
   background: radial-gradient(
     50% 50% at 50% 50%,
-    #72008686 0%,
+    #72008683 0%,
     rgba(191, 160, 255, 0) 100%,
     rgba(191, 160, 255, 0) 100%
   );
-  mix-blend-mode: hard-light;
+  // opacity: 0.8;
+  // mix-blend-mode: screen;
 }
 </style>

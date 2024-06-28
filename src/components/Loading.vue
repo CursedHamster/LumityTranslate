@@ -99,7 +99,7 @@ onMounted(() => {
   margin: auto;
   aspect-ratio: 1/1;
   border-radius: 50%;
-  background: rgb(255, 220, 131);
+  background: rgb(236, 197, 212);
 }
 
 .loading-progress-container {

@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
-  word-break: break-all;
+  word-break: break-word;
   resize: none;
   white-space: pre-wrap;
   box-sizing: border-box;
@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
   &::placeholder,
   .placeholder {
     color: white;
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 .translate-letters {

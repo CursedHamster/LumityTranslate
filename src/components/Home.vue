@@ -312,13 +312,15 @@ onBeforeMount(() => {
   }
   .translate-dropdown-container {
     border-radius: 0;
-    border: 0;
+    // border: 0;
+    border-left: 0;
+    border-right: 0;
   }
 }
 
 @media screen and (max-width: @screen-sm) {
   .main-container {
-    padding: 0;
+    padding: @padding-sm 0;
   }
   .translate-bodies-container {
     gap: @gap-sm;

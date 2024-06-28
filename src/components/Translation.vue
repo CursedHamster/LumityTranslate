@@ -89,31 +89,11 @@ function copyTranslation() {
 </template>
 <style scoped lang="less">
 @import "../style";
-.translate-container {
-  width: 100%;
-}
-.translate-body {
-  position: relative;
-  min-height: @min-height;
-  height: 100%;
-  display: flex;
-  .glassmorphicBackground();
-  &.light {
-    .glassmorphicBackground.light();
-    padding: @padding-sm @padding-sm (@padding-sm * 2 + @font-size-lg)
-      @padding-sm;
-  }
-  &.dark {
-    .glassmorphicBackground.dark();
-    padding: @padding-sm (@padding-xs * 2 + @font-size-lg)
-      (@padding-sm * 2 + @font-size-lg) @padding-sm;
-  }
-}
 .translate-area {
   flex-grow: 1;
   width: 100%;
   overflow: hidden;
-  word-break: break-all;
+  word-break: break-word;
   resize: none;
   white-space: pre-wrap;
   box-sizing: border-box;
@@ -125,7 +105,7 @@ function copyTranslation() {
   &::placeholder,
   .placeholder {
     color: white;
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 
@@ -160,19 +140,6 @@ function copyTranslation() {
 }
 
 @media screen and (max-width: @screen-md) {
-  .translate-body {
-    border-radius: 0;
-    border: 0;
-    &.light {
-      padding: @padding-md @padding-md (@padding-md * 2 + @font-size-lg)
-        @padding-md;
-    }
-    &.dark {
-      .glassmorphicBackground.dark();
-      padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
-        (@padding-md * 2 + @font-size-lg) @padding-md;
-    }
-  }
   .translate-copy,
   .translate-letters {
     bottom: @padding-sm;
@@ -185,17 +152,6 @@ function copyTranslation() {
 }
 
 @media screen and (max-width: @screen-sm) {
-  .translate-body {
-    &.light {
-      padding: @padding-sm @padding-sm (@padding-sm * 2 + @font-size-lg)
-        @padding-sm;
-    }
-    &.dark {
-      .glassmorphicBackground.dark();
-      padding: @padding-sm (@padding-sm * 2 + @font-size-lg)
-        (@padding-sm * 2 + @font-size-lg) @padding-sm;
-    }
-  }
   .translate-copy,
   .translate-letters {
     bottom: @padding-xs;

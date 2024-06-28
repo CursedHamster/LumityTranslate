@@ -29,7 +29,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: @gap-md;
+  row-gap: @gap-sm;
+  column-gap: @gap-xl;
   flex-wrap: wrap;
 }
 
@@ -55,10 +56,11 @@
 @media screen and (max-width: @screen-sm) {
   .footer {
     padding: @padding-sm @padding-sm;
-    gap: @gap-sm;
+    justify-content: center;
+    // gap: @gap-lg;
   }
   .footer-text {
-    text-align: end;
+    // text-align: end;
   }
 }
 </style>
